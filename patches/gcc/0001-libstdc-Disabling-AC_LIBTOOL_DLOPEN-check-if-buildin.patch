@@ -1,0 +1,47 @@
+From a929b39aa32a6bc65158bd8e32ce96bc1c906065 Mon Sep 17 00:00:00 2001
+From: Vladimir Vishnevsky <vv.os.swe@gmail.com>
+Date: Tue, 15 Dec 2020 11:40:07 +0000
+Subject: [PATCH] libstdc++: Disabling AC_LIBTOOL_DLOPEN check if building with
+ avr-libc
+
+The AC_LIBTOOL_DLOPEN checks were previously disabled for newlib targets.
+The patch applies similar logic to avr-libc based builds.
+
+libstdc++-v3/ChangeLog:
+
+	* configure.ac: Skip AC_LIBTOOL_DLOPEN check if avr-libc is used.
+	* configure: Regenerate.
+---
+ libstdc++-v3/configure    | 2 +-
+ libstdc++-v3/configure.ac | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libstdc++-v3/configure b/libstdc++-v3/configure
+index d7a4826b8e2..e6f30a1a706 100755
+--- a/libstdc++-v3/configure
++++ b/libstdc++-v3/configure
+@@ -5899,7 +5899,7 @@ $as_echo "$as_me: OS config directory is $os_include_dir" >&6;}
+ 
+ 
+ # Libtool setup.
+-if test "x${with_newlib}" != "xyes"; then
++if test "x${with_newlib}" != "xyes" && test "x${with_avrlibc}" != "xyes"; then
+   enable_dlopen=yes
+ 
+ 
+diff --git a/libstdc++-v3/configure.ac b/libstdc++-v3/configure.ac
+index cbfdf4c6bad..771814110a1 100644
+--- a/libstdc++-v3/configure.ac
++++ b/libstdc++-v3/configure.ac
+@@ -90,7 +90,7 @@ AC_SYS_LARGEFILE
+ GLIBCXX_CONFIGURE
+ 
+ # Libtool setup.
+-if test "x${with_newlib}" != "xyes"; then
++if test "x${with_newlib}" != "xyes" && test "x${with_avrlibc}" != "xyes"; then
+   AC_LIBTOOL_DLOPEN
+ fi
+ AM_PROG_LIBTOOL
+-- 
+2.17.1
+

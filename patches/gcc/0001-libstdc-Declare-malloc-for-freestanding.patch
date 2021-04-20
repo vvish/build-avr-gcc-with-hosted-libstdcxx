@@ -1,0 +1,35 @@
+From 15d649f79d6b6dc336f6a32eec242b652a262a82 Mon Sep 17 00:00:00 2001
+From: Jonathan Wakely <jwakely@redhat.com>
+Date: Thu, 25 Mar 2021 18:24:37 +0000
+Subject: [PATCH] libstdc++: Declare malloc for freestanding
+
+For a target with none of aligned_alloc, memalign etc. we defined our
+own aligned_alloc using malloc, so we need a declaration of malloc. As
+in libsupc++/new_op.cc we need to declare it ourselves for freestanding
+environments.
+
+libstdc++-v3/ChangeLog:
+
+	* libsupc++/new_opa.cc [!_GLIBCXX_HOSTED]: Declare malloc.
+---
+ libstdc++-v3/libsupc++/new_opa.cc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/libstdc++-v3/libsupc++/new_opa.cc b/libstdc++-v3/libsupc++/new_opa.cc
+index 59296226e..6b78729dc 100644
+--- a/libstdc++-v3/libsupc++/new_opa.cc
++++ b/libstdc++-v3/libsupc++/new_opa.cc
+@@ -54,6 +54,10 @@ extern "C"
+   void *posix_memalign(void **, size_t alignment, size_t size);
+ # elif _GLIBCXX_HAVE_MEMALIGN
+   void *memalign(size_t alignment, size_t size);
++# else
++  // A freestanding C runtime may not provide "malloc" -- but there is no
++  // other reasonable way to implement "operator new".
++  void *malloc(size_t);
+ # endif
+ }
+ #endif
+-- 
+2.25.1
+

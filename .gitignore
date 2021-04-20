@@ -1,0 +1,5 @@
+# Temporary artifacts folder
+tmp/
+
+# Default output folder
+out/
